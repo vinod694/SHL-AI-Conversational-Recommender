@@ -1,0 +1,105 @@
+[
+    {
+        "name": "SHL Occupational Personality Questionnaire (OPQ)",
+        "description": "Our occupational personality questionnaire helps you to get accurate, bias-free assessments by matching individual working preferences to business requirements.",
+        "category": "Personality Assessment",
+        "sections": [
+            "Assessing Candidates",
+            "Profile Matching",
+            "Candidate Feedback"
+        ],
+        "url": "https://www.shl.com/products/assessments/personality-assessment/shl-occupational-personality-questionnaire-opq/",
+        "id": "shl-occupational-personality-questionnaire-opq",
+        "embedding_text": "Name: SHL Occupational Personality Questionnaire (OPQ) Category: Personality Assessment Description: Our occupational personality questionnaire helps you to get accurate, bias-free assessments by matching individual working preferences to business requirements. Sections: Assessing Candidates, Profile Matching, Candidate Feedback"
+    },
+    {
+        "name": "SHL Motivational Questionnaire",
+        "description": "Build an engaged, high-performing workforce using our motivation questionnaire (MQ) by matching individual employee motivation to team and organizational goals.",
+        "category": "Personality Assessment",
+        "sections": [
+            "Motivation Evaluation",
+            "Candidate Profile",
+            "Seamless Integration"
+        ],
+        "url": "https://www.shl.com/products/assessments/personality-assessment/shl-motivation-questionnaire-mq/",
+        "id": "shl-motivational-questionnaire",
+        "embedding_text": "Name: SHL Motivational Questionnaire Category: Personality Assessment Description: Build an engaged, high-performing workforce using our motivation questionnaire (MQ) by matching individual employee motivation to team and organizational goals. Sections: Motivation Evaluation, Candidate Profile, Seamless Integration"
+    },
+    {
+        "name": "SHL Global Skills Assessment",
+        "description": "SHL&#039;s Global Skills Assessment measures 96 behavioral skills in 15 minutes. Objective data for onboarding, upskilling, reskilling, and workforce planning.",
+        "category": "Behavioral Assessment",
+        "sections": [
+            "Measure what matters",
+            "Gather meaningful data",
+            "Deliver actionable insight",
+            "Identify who can grow",
+            "We already have our own competency framework. Why would we use the SHL Universal Competency Framework (UCF)?",
+            "How does this help with upskilling and reskilling?",
+            "How does skills data from hiring get used later in development or mobility?",
+            "Is there evidence the GSA predicts performance?",
+            "What does \"globally normed\" mean for my organization?"
+        ],
+        "url": "https://www.shl.com/products/assessments/behavioral-assessments/global-skills-assessment-gsa/",
+        "id": "shl-global-skills-assessment",
+        "embedding_text": "Name: SHL Global Skills Assessment Category: Behavioral Assessment Description: SHL&#039;s Global Skills Assessment measures 96 behavioral skills in 15 minutes. Objective data for onboarding, upskilling, reskilling, and workforce planning. Sections: Measure what matters, Gather meaningful data, Deliver actionable insight, Identify who can grow, We already have our own competency framework. Why would we use the SHL Universal Competency Framework (UCF)?, How does this help with upskilling and reskilling?, How does skills data from hiring get used later in development or mobility?, Is there evidence the GSA predicts performance?, What does \"globally normed\" mean for my organization?"
+    },
+    {
+        "name": "Situational Judgement Tests",
+        "description": "Using our Situational Judgment Tests (SJT), you can measure candidates&#039; behavioral fit to a given role by assessing their response to a specific work situation.",
+        "category": "Behavioral Assessment",
+        "sections": [
+            "Evaluating Candidates' Judgement",
+            "Evaluating Behavioral Fit",
+            "Streamline Candidate Selection"
+        ],
+        "url": "https://www.shl.com/products/assessments/behavioral-assessments/situation-judgement-tests-sjt/",
+        "id": "situational-judgement-tests",
+        "embedding_text": "Name: Situational Judgement Tests Category: Behavioral Assessment Description: Using our Situational Judgment Tests (SJT), you can measure candidates&#039; behavioral fit to a given role by assessing their response to a specific work situation. Sections: Evaluating Candidates' Judgement, Evaluating Behavioral Fit, Streamline Candidate Selection"
+    },
+    {
+        "name": "SHL Coding Skills Assessment and Simulations",
+        "description": "Shortlist 45% more candidates within half the usual hiring time with our coding skills assessment for full stack, data engineering, front-end and more roles.",
+        "category": "Skills & Simulations",
+        "sections": [
+            "Evaluate software engineering skills in 50+ coding languages and level the playing field for candidates.",
+            "Real-Life Problem Solving",
+            "Coding Skills Report"
+        ],
+        "url": "https://www.shl.com/products/assessments/skills-and-simulations/coding-simulations/",
+        "id": "shl-coding-skills-assessment-and-simulations",
+        "embedding_text": "Name: SHL Coding Skills Assessment and Simulations Category: Skills & Simulations Description: Shortlist 45% more candidates within half the usual hiring time with our coding skills assessment for full stack, data engineering, front-end and more roles. Sections: Evaluate software engineering skills in 50+ coding languages and level the playing field for candidates., Real-Life Problem Solving, Coding Skills Report"
+    },
+    {
+        "name": "Business Skills Assessment Tests for Deep Insights",
+        "description": "With our computer literacy test, assess candidates&#039; Microsoft Office proficiency, such as working with graphs and charts, creating presentations, and more.",
+        "category": "Skills & Simulations",
+        "sections": [],
+        "url": "https://www.shl.com/products/assessments/skills-and-simulations/business-skills/",
+        "id": "business-skills-assessment-tests-for-deep-insights",
+        "embedding_text": "Name: Business Skills Assessment Tests for Deep Insights Category: Skills & Simulations Description: With our computer literacy test, assess candidates&#039; Microsoft Office proficiency, such as working with graphs and charts, creating presentations, and more."
+    },
+    {
+        "name": "Fast, Simple Technical Skill Assessment",
+        "description": "SHL Technical Skills assessment helps you to measure knowledge of 180+ technology concepts in less than 15 minutes for Full Stack, Front-end, Data Science, DevOps, and more roles.",
+        "category": "Skills & Simulations",
+        "sections": [
+            "Screen Technical Talent for 200+ Key Skills in Under 15 Minutes."
+        ],
+        "url": "https://www.shl.com/products/assessments/skills-and-simulations/technical-skills/",
+        "id": "fast,-simple-technical-skill-assessment",
+        "embedding_text": "Name: Fast, Simple Technical Skill Assessment Category: Skills & Simulations Description: SHL Technical Skills assessment helps you to measure knowledge of 180+ technology concepts in less than 15 minutes for Full Stack, Front-end, Data Science, DevOps, and more roles. Sections: Screen Technical Talent for 200+ Key Skills in Under 15 Minutes."
+    },
+    {
+        "name": "AI-powered Language Proficiency Tests",
+        "description": "SHL\u2019s AI-powered suite of communication and language proficiency tests automates language assessment, helping you to faster find and hire the right people.",
+        "category": "Skills & Simulations",
+        "sections": [
+            "SHL Insights",
+            "SHL recommended candidates were 63% more likely to be high performers."
+        ],
+        "url": "https://www.shl.com/products/assessments/skills-and-simulations/language-evaluation/",
+        "id": "ai-powered-language-proficiency-tests",
+        "embedding_text": "Name: AI-powered Language Proficiency Tests Category: Skills & Simulations Description: SHL\u2019s AI-powered suite of communication and language proficiency tests automates language assessment, helping you to faster find and hire the right people. Sections: SHL Insights, SHL recommended candidates were 63% more likely to be high performers."
+    }
+]
