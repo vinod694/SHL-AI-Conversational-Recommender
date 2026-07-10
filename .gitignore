@@ -37,8 +37,7 @@ Thumbs.db
 # Generated Data
 # ============================
 
-data/embeddings.npy
-data/faiss.index
+
 
 # ============================
 # Logs
