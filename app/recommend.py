@@ -2,10 +2,20 @@ from app.retriever import Retriever
 from app.llm import ask_gemini
 from app.prompts import SYSTEM_PROMPT
 
-retriever = Retriever()
+retriever = None
+
+def get_retriever():
+    global retriever
+
+    if retriever is None:
+        retriever = Retriever()
+
+    return retriever
 
 
 def recommend(query: str):
+
+    retriever = get_retriever()
 
     assessments = retriever.search(query)
 

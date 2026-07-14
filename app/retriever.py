@@ -20,11 +20,11 @@ INDEX_FILE = BASE_DIR / "data" / "faiss.index"
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-TOP_K = 5
+TOP_K = 3
 
 SIMILARITY_THRESHOLD = 0.15
 
-DEBUG = True
+DEBUG = False
 
 
 class Retriever:
