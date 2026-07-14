@@ -4,25 +4,34 @@ from app.prompts import SYSTEM_PROMPT
 
 retriever = None
 
+
 def get_retriever():
     global retriever
 
     if retriever is None:
+        print("STEP 1 - Creating Retriever")
         retriever = Retriever()
+        print("STEP 2 - Retriever Created")
 
     return retriever
 
 
 def recommend(query: str):
 
+    print("STEP 3 - recommend() called")
+
     retriever = get_retriever()
 
+    print("STEP 4 - Searching")
+
     assessments = retriever.search(query)
+
+    print(f"STEP 5 - Found {len(assessments)} assessments")
 
     if not assessments:
         return {
             "query": query,
-            "recommendation": "No suitable SHL assessments were found for this job description.",
+            "recommendation": "No suitable SHL assessments were found.",
             "assessments": []
         }
 
@@ -31,7 +40,6 @@ def recommend(query: str):
     context = ""
 
     for assessment in top_assessments:
-
         context += f"""
 Assessment Name:
 {assessment["name"]}
@@ -48,6 +56,8 @@ URL:
 ----------------------------------------
 """
 
+    print("STEP 6 - Calling Gemini")
+
     prompt = f"""
 {SYSTEM_PROMPT}
 
@@ -62,7 +72,6 @@ Available SHL Assessments:
 Return recommendations ONLY using the assessments listed above.
 
 For each assessment provide:
-
 1. Why it is recommended
 2. Skills evaluated
 3. Official SHL URL
@@ -72,31 +81,10 @@ Do not invent assessments.
 
     recommendation = ask_gemini(prompt)
 
+    print("STEP 7 - Gemini completed")
+
     return {
         "query": query,
         "recommendation": recommendation,
         "assessments": top_assessments
     }
-
-
-if __name__ == "__main__":
-
-    print("=" * 80)
-    print("SHL AI Assessment Recommendation System")
-    print("=" * 80)
-
-    while True:
-
-        query = input("\nEnter Job Description ('exit' to quit): ")
-
-        if query.lower() == "exit":
-            print("\nGoodbye!")
-            break
-
-        print("\nSearching SHL Catalog...\n")
-
-        result = recommend(query)
-
-        print("=" * 80)
-        print(result["recommendation"])
-        print("=" * 80)

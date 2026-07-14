@@ -5,52 +5,41 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# ==========================================================
-# Paths
-# ==========================================================
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 CATALOG_FILE = BASE_DIR / "data" / "catalog.json"
 INDEX_FILE = BASE_DIR / "data" / "faiss.index"
 
-# ==========================================================
-# Configuration
-# ==========================================================
-
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 TOP_K = 3
-
 SIMILARITY_THRESHOLD = 0.15
-
-DEBUG = False
 
 
 class Retriever:
 
     def __init__(self):
 
-        print("Loading embedding model...")
+        print("STEP A - Starting Retriever")
 
-        self.model = SentenceTransformer( MODEL_NAME)
-    
-        print("Loading catalog...")
+        print("STEP B - Loading SentenceTransformer")
+        self.model = SentenceTransformer(MODEL_NAME)
+        print("STEP C - SentenceTransformer Loaded")
 
+        print("STEP D - Loading catalog")
         with open(CATALOG_FILE, "r", encoding="utf-8") as f:
             self.catalog = json.load(f)
+        print("STEP E - Catalog Loaded")
 
-        print("Loading FAISS index...")
-
+        print("STEP F - Loading FAISS")
         self.index = faiss.read_index(str(INDEX_FILE))
+        print("STEP G - FAISS Loaded")
 
-        print("\nRetriever Ready!\n")
+        print("Retriever Ready")
 
     def search(self, query, top_k=TOP_K):
 
-        # ----------------------------------------
-        # Convert query into embedding
-        # ----------------------------------------
+        print("STEP H - Encoding Query")
 
         query_embedding = self.model.encode(
             query,
@@ -58,92 +47,30 @@ class Retriever:
             normalize_embeddings=True
         ).astype("float32")
 
-        # ----------------------------------------
-        # Search FAISS
-        # ----------------------------------------
+        print("STEP I - Query Encoded")
 
         distances, indices = self.index.search(
             np.array([query_embedding]),
             top_k
         )
 
-        results = []
+        print("STEP J - FAISS Search Complete")
 
-        # ----------------------------------------
-        # Process Results
-        # ----------------------------------------
+        results = []
 
         for score, idx in zip(distances[0], indices[0]):
 
             if idx == -1:
                 continue
 
-            if DEBUG:
-                print(
-                    f"Raw Score: {score:.4f} | "
-                    f"{self.catalog[idx]['name']}"
-                )
-
             if score < SIMILARITY_THRESHOLD:
                 continue
 
             assessment = self.catalog[idx].copy()
-
             assessment["score"] = round(float(score), 4)
 
             results.append(assessment)
 
+        print(f"STEP K - Returning {len(results)} results")
+
         return results
-
-
-# ==========================================================
-# Test
-# ==========================================================
-
-if __name__ == "__main__":
-
-    retriever = Retriever()
-
-    while True:
-
-        print("=" * 70)
-
-        query = input(
-            "\nEnter your query ('exit' to quit): "
-        )
-
-        if query.lower() == "exit":
-            break
-
-        print()
-
-        results = retriever.search(query)
-
-        print()
-
-        if not results:
-
-            print("❌ No relevant assessments found.")
-            print(
-                "Try using different keywords.\n"
-            )
-
-            continue
-
-        print("=" * 70)
-
-        print(
-            f"Top {len(results)} Matching Assessments\n"
-        )
-
-        for i, item in enumerate(results, start=1):
-
-            print(f"{i}. {item['name']}")
-
-            print(f"Score      : {item['score']}")
-
-            print(f"Category   : {item['category']}")
-
-            print(f"URL        : {item['url']}")
-
-            print("-" * 70)
