@@ -33,11 +33,8 @@ class Retriever:
 
         print("Loading embedding model...")
 
-        self.model = SentenceTransformer(
-    MODEL_NAME,
-    local_files_only=True
-)
-
+        self.model = SentenceTransformer( MODEL_NAME)
+    
         print("Loading catalog...")
 
         with open(CATALOG_FILE, "r", encoding="utf-8") as f:
