@@ -1,46 +1,22 @@
-from app.retriever import Retriever
+import json
+from pathlib import Path
+
 from app.llm import ask_gemini
-from app.prompts import SYSTEM_PROMPT
 
-retriever = None
-
-
-def get_retriever():
-    global retriever
-
-    if retriever is None:
-        print("STEP 1 - Creating Retriever")
-        retriever = Retriever()
-        print("STEP 2 - Retriever Created")
-
-    return retriever
+BASE_DIR = Path(__file__).resolve().parent.parent
+CATALOG_FILE = BASE_DIR / "data" / "catalog.json"
 
 
 def recommend(query: str):
 
-    print("STEP 3 - recommend() called")
+    with open(CATALOG_FILE, "r", encoding="utf-8") as f:
+        catalog = json.load(f)
 
-    retriever = get_retriever()
+    catalog_text = ""
 
-    print("STEP 4 - Searching")
+    for assessment in catalog:
 
-    assessments = retriever.search(query)
-
-    print(f"STEP 5 - Found {len(assessments)} assessments")
-
-    if not assessments:
-        return {
-            "query": query,
-            "recommendation": "No suitable SHL assessments were found.",
-            "assessments": []
-        }
-
-    top_assessments = assessments[:3]
-
-    context = ""
-
-    for assessment in top_assessments:
-        context += f"""
+        catalog_text += f"""
 Assessment Name:
 {assessment["name"]}
 
@@ -56,35 +32,129 @@ URL:
 ----------------------------------------
 """
 
-    print("STEP 6 - Calling Gemini")
-
     prompt = f"""
-{SYSTEM_PROMPT}
+You are an SHL Assessment Recommendation Expert.
 
-Recruiter Request:
+A recruiter wants to hire for the following role:
 
 {query}
 
-Available SHL Assessments:
+Below is the complete SHL Assessment Catalog.
 
-{context}
+{catalog_text}
 
-Return recommendations ONLY using the assessments listed above.
+Your task:
 
-For each assessment provide:
-1. Why it is recommended
-2. Skills evaluated
-3. Official SHL URL
+1. Select the THREE most suitable assessments.
+2. Give an overall recommendation.
+3. Assign each assessment a confidence score between 0 and 1.
+4. Use ONLY assessments listed in the catalog.
+5. Do NOT invent assessments.
 
-Do not invent assessments.
+Return ONLY valid JSON in this EXACT format:
+
+{{
+  "recommendation": "Overall recommendation",
+
+  "selected": [
+    {{
+      "name": "Assessment Name",
+      "score": 0.98
+    }},
+    {{
+      "name": "Assessment Name",
+      "score": 0.95
+    }},
+    {{
+      "name": "Assessment Name",
+      "score": 0.90
+    }}
+  ]
+}}
 """
 
-    recommendation = ask_gemini(prompt)
+    response = ask_gemini(prompt)
 
-    print("STEP 7 - Gemini completed")
+    # Remove markdown if Gemini returns ```json ... ```
+    response = response.strip()
+
+    if response.startswith("```json"):
+        response = response.replace("```json", "", 1)
+
+    if response.startswith("```"):
+        response = response.replace("```", "", 1)
+
+    if response.endswith("```"):
+        response = response[:-3]
+
+    response = response.strip()
+
+    try:
+        result = json.loads(response)
+
+    except Exception:
+
+        return {
+            "query": query,
+            "recommendation": response,
+            "assessments": []
+        }
+
+    selected = result.get("selected", [])
+
+    selected_map = {}
+
+    for item in selected:
+
+        selected_map[item["name"]] = item["score"]
+
+    matched = []
+
+    for assessment in catalog:
+
+        if assessment["name"] in selected_map:
+
+            matched.append(
+                {
+                    "name": assessment["name"],
+                    "category": assessment["category"],
+                    "score": float(selected_map[assessment["name"]]),
+                    "url": assessment["url"],
+                }
+            )
+
+    # Highest confidence first
+    matched.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
     return {
         "query": query,
-        "recommendation": recommendation,
-        "assessments": top_assessments
+        "recommendation": result["recommendation"],
+        "assessments": matched,
     }
+
+
+if __name__ == "__main__":
+
+    while True:
+
+        query = input("\nEnter Job Description ('exit' to quit): ")
+
+        if query.lower() == "exit":
+            break
+
+        result = recommend(query)
+
+        print("\n")
+        print("=" * 80)
+        print(result["recommendation"])
+        print("=" * 80)
+
+        for assessment in result["assessments"]:
+
+            print(f"\nName      : {assessment['name']}")
+            print(f"Category  : {assessment['category']}")
+            print(f"Score     : {assessment['score']}")
+            print(f"URL       : {assessment['url']}")

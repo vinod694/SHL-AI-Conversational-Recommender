@@ -1,76 +1,95 @@
 import json
+import re
 from pathlib import Path
 
-import faiss
-import numpy as np
-from sentence_transformers import SentenceTransformer
+from app.llm import ask_gemini
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 CATALOG_FILE = BASE_DIR / "data" / "catalog.json"
-INDEX_FILE = BASE_DIR / "data" / "faiss.index"
-
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-
-TOP_K = 3
-SIMILARITY_THRESHOLD = 0.15
 
 
 class Retriever:
 
     def __init__(self):
 
-        print("STEP A - Starting Retriever")
+        print("Loading catalog...")
 
-        print("STEP B - Loading SentenceTransformer")
-        self.model = SentenceTransformer(MODEL_NAME)
-        print("STEP C - SentenceTransformer Loaded")
-
-        print("STEP D - Loading catalog")
         with open(CATALOG_FILE, "r", encoding="utf-8") as f:
             self.catalog = json.load(f)
-        print("STEP E - Catalog Loaded")
 
-        print("STEP F - Loading FAISS")
-        self.index = faiss.read_index(str(INDEX_FILE))
-        print("STEP G - FAISS Loaded")
+        print(f"Loaded {len(self.catalog)} assessments.")
 
-        print("Retriever Ready")
+    def extract_keywords(self, query: str):
 
-    def search(self, query, top_k=TOP_K):
+        prompt = f"""
+Extract only the important hiring keywords from this job description.
 
-        print("STEP H - Encoding Query")
+Return ONLY comma-separated keywords.
 
-        query_embedding = self.model.encode(
-            query,
-            convert_to_numpy=True,
-            normalize_embeddings=True
-        ).astype("float32")
+Job Description:
+{query}
+"""
 
-        print("STEP I - Query Encoded")
+        response = ask_gemini(prompt)
 
-        distances, indices = self.index.search(
-            np.array([query_embedding]),
-            top_k
+        keywords = [
+            k.strip().lower()
+            for k in response.split(",")
+            if k.strip()
+        ]
+
+        return keywords
+
+    def score_assessment(self, assessment, keywords):
+
+        score = 0
+
+        title = assessment.get("name", "").lower()
+        category = assessment.get("category", "").lower()
+        description = assessment.get("description", "").lower()
+
+        for keyword in keywords:
+
+            keyword = re.escape(keyword)
+
+            if re.search(keyword, title):
+                score += 5
+
+            if re.search(keyword, category):
+                score += 3
+
+            if re.search(keyword, description):
+                score += 1
+
+        return score
+
+    def search(self, query, top_k=3):
+
+        print("Extracting keywords...")
+
+        keywords = self.extract_keywords(query)
+
+        print("Keywords:", keywords)
+
+        scored = []
+
+        for assessment in self.catalog:
+
+            score = self.score_assessment(
+                assessment,
+                keywords
+            )
+
+            if score > 0:
+
+                item = assessment.copy()
+                item["score"] = score
+
+                scored.append(item)
+
+        scored.sort(
+            key=lambda x: x["score"],
+            reverse=True
         )
 
-        print("STEP J - FAISS Search Complete")
-
-        results = []
-
-        for score, idx in zip(distances[0], indices[0]):
-
-            if idx == -1:
-                continue
-
-            if score < SIMILARITY_THRESHOLD:
-                continue
-
-            assessment = self.catalog[idx].copy()
-            assessment["score"] = round(float(score), 4)
-
-            results.append(assessment)
-
-        print(f"STEP K - Returning {len(results)} results")
-
-        return results
+        return scored[:top_k]
